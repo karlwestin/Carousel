@@ -51,18 +51,22 @@ var carousel = function() {
         },
         
         rotate: function(newIndex) {
-        var steps = newIndex - currentIndex;
-        steps = (steps > 0) ? steps - 1 : steps + items.length - 1;
+            var steps = newIndex - currentIndex;
+            steps = (steps > 0) ? steps - 1 : steps + items.length - 1;
+            
+            var i = 0;
+            setTimeout(function roll() {
+                currentIndex++;
+                setPosition(currentIndex);
+                if(i<steps) {
+                    i++;
+                    setTimeout(roll, 500);
+                }
+            }, 500);
+        },
         
-        var i = 0;
-        setTimeout(function roll() {
-            currentIndex++;
-            setPosition(currentIndex);
-            if(i<steps) {
-                i++;
-                setTimeout(roll, 500);
-            }
-        }, 500);
+        next: function() {
+            this.rotate(this.shownIndex() + 1);
         }
         
     });
