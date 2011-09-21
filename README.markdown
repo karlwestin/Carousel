@@ -16,4 +16,4 @@ How to use
 
 * `carousel.shownIndex()` to see what index is there. 
 
-* `carousel.next() => next item
+* `carousel.next()` => next item
