@@ -12,6 +12,8 @@ How to use
 
 * Create a UL with the carousel objects as LI:s
 
-* Use carousel.rotate(index) to set index (0-based)
+* Use `carousel.rotate(index)` to set index (0-based)
 
-* carousel.shownIndex() to see what index is there. 
+* `carousel.shownIndex()` to see what index is there. 
+
+* `carousel.next() => next item
