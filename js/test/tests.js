@@ -7,7 +7,7 @@ module("Carousel");
 	
 		expect(4);
 	
-		var mock = createMock(7);
+		var mock = createMock(6);
 		carousel.init(mock);
 		
 		var shown = carousel.shownIndex();
@@ -29,9 +29,9 @@ module("Carousel");
 					var shown = carousel.shownIndex();
 					equal(shown, 2, "Index is now on 2 again");
 					start();									
-				}, 1500);			
+				}, 3000);			
 				
-			}, 3500);
+			}, 6000);
 			
 		}, 1000);
 			
@@ -42,8 +42,7 @@ module("Carousel");
 function createMock(length) {
 	var mock = [];
 	for (var i = 0; i < length; i++) { 
-		mock.push(document.createElement("li")); 
-		mock[i].innerHTML = i; 
+		mock.push(i); 
 	}
 	return mock;
 }
