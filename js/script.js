@@ -2,8 +2,9 @@
 
 var carousel = function() {
 
-    var items = document.querySelectorAll("ul li"),    
-        radius = 400;
+	var items,
+		currentIndex,    
+    	radius = 400;
     
     function radian(degrees) {
         return degrees * Math.PI/180;
@@ -36,16 +37,9 @@ var carousel = function() {
         });
     }
     
-    var currentIndex = 0;
-    setPosition(0);
-    
-    function forEach(array, action) {
-        for(var i = 0; i < array.length; i++) {
-            action(array[i], i, array);
-        }
-    }
-    
     return({
+    	setPosition: setPosition,
+    
         shownIndex: function() {
             return currentIndex - Math.floor(currentIndex/items.length) * items.length;
         },
@@ -55,20 +49,46 @@ var carousel = function() {
             steps = (steps > 0) ? steps - 1 : steps + items.length - 1;
             
             var i = 0;
+
             setTimeout(function roll() {
                 currentIndex++;
                 setPosition(currentIndex);
                 if(i<steps) {
                     i++;
                     setTimeout(roll, 500);
-                }
+                } 
             }, 500);
+            
+            
         },
         
         next: function() {
             this.rotate(this.shownIndex() + 1);
+        },
+        
+        init: function(new_items, start) {
+        	start || (start = 0);
+        	items = new_items;
+        	
+        	
+        	
+        	currentIndex = start;
+        	setPosition(start);
         }
         
     });
 
 }();
+carousel.init(document.querySelectorAll("ul li"), 0);
+
+
+
+
+
+// Utility functions
+
+function forEach(array, action) {
+    for(var i = 0; i < array.length; i++) {
+        action(array[i], i, array);
+    }
+}
