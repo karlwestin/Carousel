@@ -35,16 +35,18 @@ var carousel = function() {
     
     function setUpCircle(items, offset) {
     
-        var positions = getPositions(items.length, offset);
+        //var positions = getPositions(items.length, offset);
     	
         forEach(items, function(element, index, array) {
-            panels.push(addView(positions[index]));
+            panels.push(addView());
         });
         
-        currentIndex = offset;
+        move(offset);
     }
     
     function addView(config) {
+            config || (config = {x:0, y:0, z:0});
+
 			var element = new THREE.Mesh( new THREE.PlaneGeometry( 400, 400 ), new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff } ) );
             
             element.overdraw = true;
@@ -114,10 +116,8 @@ var carousel = function() {
     
     function add(index) {
         index || (index = panels.length);
-        
-        panels.splice(index, 0, addView({x: 0, y: 0, z: 0}));
-        move(currentIndex);  
-        
+        panels.splice(index, 0, addView());
+        move(currentIndex);      
     }
     
     function setTiming(time) {
