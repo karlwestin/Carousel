@@ -29,29 +29,24 @@ var carousel = function() {
 
 	var panels = [],
 		currentIndex = 0,    
-    	radius = 800;
+    	radius = 800,
+    	timeout = 500;
+    	
     
     function setUpCircle(items, offset) {
+    
+        var positions = getPositions(items.length, offset);
     	
         forEach(items, function(element, index, array) {
-            index -= offset;
 
 			var element = new THREE.Mesh( new THREE.PlaneGeometry( 400, 400 ), new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff } ) );
             
             element.overdraw = true;
 			scene.addChild( element );    
-            
-            element.rotateY = (360*index/array.length);
-            element.X = setX(element.rotateY);
-            element.Z = setZ(element.rotateY);
-            
-            setRotation(element);
-        
-            function setRotation(element) {
-			  element.rotation.x = radian(-25);
-			  element.position.z = element.Z;
-			  element.position.x = element.X;
-            }
+                    
+		    element.rotation.x = radian(-25);
+		    element.position.z = positions[index].z;
+		    element.position.x = positions[index].x;
             
             panels.push(element);
         
@@ -60,16 +55,63 @@ var carousel = function() {
         currentIndex = offset;
     }
     
+    function getPositions(numberOfPanels, panelAtFront) {
+        var positions = [];
+        
+        for (var i = 0; i < numberOfPanels; i++) {        
+			var position = i - panelAtFront;
+			var rotateY = (360*position/numberOfPanels);
+			
+			var coordinates = {};
+			
+			coordinates.x = setX(rotateY);
+			coordinates.y = 0;
+			coordinates.z = setZ(rotateY);
+			
+			positions.push(coordinates);
+        }
+        
+        return positions;
+    }
+    
     function move(offset) {
-		for (var index = 0; index < panels.length; index++) {
-			var i = index - offset;
-			var rotateY = (360*i/panels.length);
-			new TWEEN.Tween( panels[index].position ).to( {
-				x: setX(rotateY),
-				y: 0,
-				z: setZ(rotateY) }, 1000 )
+        currentIndex = offset;
+        var positions = getPositions(panels.length, offset);
+    
+		for (var i = 0; i < panels.length; i++) {
+			new TWEEN.Tween( panels[i].position ).to( {
+				x: positions[i].x,
+				y: positions[i].y,
+				z: positions[i].z }, timeout)
 			.easing( TWEEN.Easing.Quadratic.EaseOut).start();
 		}    	
+    }
+    
+    function remove(index) {
+
+        var current = this.shownIndex(), new_index;
+        
+        if(index != current) {
+            if (index > current)
+                new_index = current;
+            else
+                new_index = --current;
+        } else {
+            if(current + 1 <= panels.length -1)
+                new_index = current;
+            else
+                new_index = 0;         
+        }
+        
+        scene.removeChild(panels[index]);
+        panels.splice(index, 1);
+        
+        move(new_index);
+        
+    }
+    
+    function setTiming(time) {
+        timeout = time;
     }
     
     function radian(degrees) {
@@ -81,31 +123,31 @@ var carousel = function() {
     }
     
     function setZ(rotateY) {
-        return radius * Math.cos(radian(rotateY)) - 2* radius;
+        return radius * Math.cos(radian(rotateY)) - 2 * radius;
     }    
     
-    return({
-    	move: move,
+    return({    
+        remove: remove,    
+        
+        // exposing timeout for testing purpose
+        setTiming: setTiming,
     
         shownIndex: function() {
             return currentIndex - Math.floor(currentIndex/panels.length) * panels.length;
         },
         
         rotate: function(newIndex) {
-            var steps = newIndex - this.shownIndex();
+            var index = this.shownIndex(), i = 0, steps = newIndex - index;
             steps = (steps > 0) ? steps - 1 : steps + panels.length - 1;
-            
-            var i = 0;
 
             setTimeout(function roll() {
-            	console.log("currentIndex: " + currentIndex + " i: " + i + " steps: " + steps);
-                currentIndex++;
-                move(currentIndex);
+                index++;
+                move(index);
                 if(i<steps) {
                     i++;
-                    setTimeout(roll, 500);
+                    setTimeout(roll, timeout);
                 } 
-            }, 500);
+            }, 1);
                  
         },
         

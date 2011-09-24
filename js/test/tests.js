@@ -1,6 +1,8 @@
 
 // documentation on writing tests here: http://docs.jquery.com/QUnit
 
+var time = 150;
+
 module("Carousel");
 
 	test("Knowing the right numbers", function() {
@@ -9,6 +11,7 @@ module("Carousel");
 	
 		var mock = createMock(6);
 		carousel.init(mock);
+        carousel.setTiming(10);	   
 		
 		var shown = carousel.shownIndex();
 		equal(shown, 0, "Carousel should start with 0");
@@ -29,13 +32,27 @@ module("Carousel");
 					var shown = carousel.shownIndex();
 					equal(shown, 2, "Index is now on 2 again");
 					start();									
-				}, 3000);			
+				}, time);			
 				
-			}, 6000);
+			}, time);
 			
-		}, 1000);
+		}, time);
 			
 	});
+	
+
+	test("Removing and adding elements", function() {
+	
+	   var mock = createMock(7);
+	   carousel.init(mock);
+       carousel.setTiming(10);	   
+	
+	   carousel.remove(0);
+       var shown = carousel.shownIndex();
+       equal(shown, 0, "After removing the first element, the carousel is showing the first element");	
+	
+	});
+
 
 
 
