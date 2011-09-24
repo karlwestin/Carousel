@@ -38,21 +38,23 @@ var carousel = function() {
         var positions = getPositions(items.length, offset);
     	
         forEach(items, function(element, index, array) {
-
+            panels.push(addView(positions[index]));
+        });
+        
+        currentIndex = offset;
+    }
+    
+    function addView(config) {
 			var element = new THREE.Mesh( new THREE.PlaneGeometry( 400, 400 ), new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff } ) );
             
             element.overdraw = true;
 			scene.addChild( element );    
                     
 		    element.rotation.x = radian(-25);
-		    element.position.z = positions[index].z;
-		    element.position.x = positions[index].x;
-            
-            panels.push(element);
-        
-        });
-        
-        currentIndex = offset;
+		    element.position.z = config.z;
+		    element.position.x = config.x;    
+		    
+		    return element;
     }
     
     function getPositions(numberOfPanels, panelAtFront) {
@@ -110,6 +112,14 @@ var carousel = function() {
         
     }
     
+    function add(index) {
+        index || (index = panels.length);
+        
+        panels.splice(index, 0, addView({x: 0, y: 0, z: 0}));
+        move(currentIndex);  
+        
+    }
+    
     function setTiming(time) {
         timeout = time;
     }
@@ -128,6 +138,8 @@ var carousel = function() {
     
     return({    
         remove: remove,    
+        
+        add: add,
         
         // exposing timeout for testing purpose
         setTiming: setTiming,

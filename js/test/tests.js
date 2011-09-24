@@ -50,6 +50,14 @@ module("Carousel");
 	   carousel.remove(0);
        var shown = carousel.shownIndex();
        equal(shown, 0, "After removing the first element, the carousel is showing the first element");	
+       carousel.add();
+       carousel.rotate(7);       
+       stop();
+       setTimeout(function() {
+            var shown = carousel.shownIndex();
+            equal(shown, 7, "Added an item at the back of array, should show element 7, not 0");
+            start()
+       }, time);
 	
 	});
 
