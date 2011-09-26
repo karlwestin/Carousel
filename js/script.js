@@ -52,9 +52,38 @@ var carousel = function() {
 
             if(typeof config.image != "string")
                 throw new Error("No image loaded on element " + number);
+            
+            var canvas = document.createElement("canvas");
+            canvas.width = 500;
+            canvas.height = 800;
+            var drawingArea = canvas.getContext("2d");
+            
+            var img = new Image();
+            img.src = config.image;
+            img.onload = function() {
+                drawingArea.drawImage(img, 0, 0);            
+                
+                if(!!config.price) {                
+                    drawingArea.fillStyle="white";
+                    drawingArea.textAlign="right";
+                    drawingArea.font = "300px 'Avenir LT Standard'";
+                    drawingArea.fillText(config.price, 400, 600);
+                    
+                    drawingArea.font = "100px 'Avenir LT Standard'"
+                    drawingArea.textAlign="left";
+                    drawingArea.fillText(String.fromCharCode(8364), 400, 600);
+                }
+                // force redraw of texture
+                texture.needsUpdate = true;
+            };
+            
+            
+            var texture = new THREE.Texture( canvas );
+			texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;            
 
-            var material = new THREE.MeshLambertMaterial( { map: THREE.ImageUtils.loadTexture( config.image ) } );
-            var element = new THREE.Mesh( new THREE.PlaneGeometry( 500, 500 ), material );
+            var material = new THREE.MeshBasicMaterial( { map: texture } );
+            var element = new THREE.Mesh( new THREE.PlaneGeometry( 500, 800 ), material );
             
             element.overdraw = true;
 			scene.addChild( element );    
@@ -187,22 +216,28 @@ var carousel = function() {
 
 var setup = [
     {
-        image: 'images/A3.png'
+        image: 'images/A3.png',
+        price: 5
     }, 
     {
-        image: 'images/B.png'
+        image: 'images/B.png',
+        price: 10
     },
     {
-        image: 'images/C.png'
+        image: 'images/C.png',
+        price: 11
     }, 
     {
-        image: 'images/D.png'
+        image: 'images/D.png',
+        price: 99
     },
     {
-        image: 'images/E.png'
+        image: 'images/E.png',
+        price: 12
     }, 
     {
-        image: 'images/F.png'
+        image: 'images/F.png',
+        price: 13
     }
 ];        
 
