@@ -46,7 +46,7 @@ function imagePrice(config) {
             
             element.overdraw = true;
                     
-		    //element.rotation.x = radian(-25);
+		    element.rotation.x = radian(-20);
 		    element.position.z = config.z;
 		    element.position.x = config.x;    
 		    

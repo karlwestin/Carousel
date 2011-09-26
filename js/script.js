@@ -14,14 +14,16 @@ var WIDTH = 1920,
 var $container = $("#container"),
 	renderer = new THREE.CanvasRenderer(),
 	camera = new THREE.Camera(VIEW_ANGLE, ASPECT, NEAR, FAR),
+//  camera = new THREE.OrthoCamera(window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, -3000, 5000),
+//    camera = new THREE.OrthoCamera(window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight-500, -500, -3000, 5000),
 	scene = new THREE.Scene();
 
 camera.position.y = 500;
-camera.position.z = 0;
+camera.position.z = -700;
 camera.position.x = WIDTH/2;
-camera.target.position.y = 0;
+camera.target.position.y = 200;
 camera.target.position.x = WIDTH/2;
-camera.target.position.z = -1000;
+camera.target.position.z = -1500;
 
 renderer.setSize(WIDTH, HEIGHT);
 $container.append(renderer.domElement);
@@ -31,7 +33,7 @@ var carousel = function(model) {
 
 	var panels = [],
 		currentIndex = 0,    
-    	radius = 1920,
+    	radius = 1400,
     	speed = 500,
     	subviews = {};
     
