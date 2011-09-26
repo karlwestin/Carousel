@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Spot>
-	<Item image="images/A3.png" type="image" price="10"/>
-	<Item image="images/B.png"  type="image" price="9"/>
-	<Item image="images/C.png"  type="image" price="11"/>  
-	<Item image="images/D.png"  type="image" price="12"/>
-	<Item image="images/E.png"  type="image" price="13"/>
-	<Item image="images/F.png"  type="image" price="15"/>		
+	<Item image="images/A3.png" type="image_price" price="10"/>
+	<Item image="images/B.png"  type="image"       price="9"/>
+	<Item image="images/C.png"  type="image_price" price="11"/>  
+	<Item image="images/D.png"  type="image_price" price="12"/>
+	<Item image="images/E.png"  type="image_price" price="13"/>
+	<Item image="images/F.png"  type="image_price" price="15"/>		
 </Spot>

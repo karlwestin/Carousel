@@ -1,5 +1,7 @@
 "use strict"
 
+// Main view for carousel pattern
+
 // SETUP
 var WIDTH = 800,
 	HEIGHT = 500,
@@ -30,7 +32,8 @@ var carousel = function() {
 	var panels = [],
 		currentIndex = 0,    
     	radius = 800,
-    	timeout = 500;
+    	timeout = 500,
+    	subviews = {};
     	
     
     function setUpCircle(items, offset) {
@@ -38,61 +41,21 @@ var carousel = function() {
         //var positions = getPositions(items.length, offset);
     	
         forEach(items, function(element, index, array) {
-            panels.push(addView(element, index));
+            panels.push(addView(element));
         });
         
         move(offset);
     }
     
-    function addView(config, number) {
-            config || (config = {x:0, y:0, z:0});
-            config.x = 0;
-            config.z = 0;
-            config.y = 0;
+    function addView(config) {
 
-            if(typeof config.image != "string")
-                throw new Error("No image loaded on element " + number);
-            
-            var canvas = document.createElement("canvas");
-            canvas.width = 500;
-            canvas.height = 800;
-            var drawingArea = canvas.getContext("2d");
-            
-            var img = new Image();
-            img.src = config.image;
-            img.onload = function() {
-                drawingArea.drawImage(img, 0, 0);            
-                
-                if(!!config.price) {                
-                    drawingArea.fillStyle="white";
-                    drawingArea.textAlign="right";
-                    drawingArea.font = "300px Avenir";
-                    drawingArea.fillText(config.price, 400, 600);
-                    
-                    drawingArea.font = "100px Avenir";
-                    drawingArea.textAlign="left";
-                    drawingArea.fillText(String.fromCharCode(8364), 400, 600);
-                }
-                // force redraw of texture
-                texture.needsUpdate = true;
-            };
-            
-            
-            var texture = new THREE.Texture( canvas );
-			texture.minFilter = THREE.LinearFilter;
-            texture.magFilter = THREE.LinearFilter;            
+        if(typeof subviews[config.type] != "function")
+            throw new Error("Not a valid subview! Passed: " + config.type);
+    
+        var element = subviews[config.type](config);
+        scene.addChild(element);
+        return element;    
 
-            var material = new THREE.MeshBasicMaterial( { map: texture } );
-            var element = new THREE.Mesh( new THREE.PlaneGeometry( 500, 800 ), material );
-            
-            element.overdraw = true;
-			scene.addChild( element );    
-                    
-		    element.rotation.x = radian(-25);
-		    element.position.z = config.z;
-		    element.position.x = config.x;    
-		    
-		    return element;
     }
     
     function getPositions(numberOfPanels, panelAtFront) {
@@ -150,6 +113,10 @@ var carousel = function() {
         
     }
     
+    function registerSubview(name, item) {
+        subviews[name] = item;
+    }
+    
     function add(index) {
         index || (index = panels.length);
         panels.splice(index, 0, addView());
@@ -159,11 +126,7 @@ var carousel = function() {
     function setTiming(time) {
         timeout = time;
     }
-    
-    function radian(degrees) {
-        return degrees * Math.PI/180;
-    }
-    
+        
     function setX(rotateY) {
         return radius * Math.sin(radian(rotateY)) + WIDTH/2;
     }
@@ -176,6 +139,8 @@ var carousel = function() {
         remove: remove,    
         
         add: add,
+        
+        registerSubview: registerSubview,
         
         // exposing timeout for testing purpose
         setTiming: setTiming,
@@ -204,6 +169,9 @@ var carousel = function() {
         },
         
         init: function(new_items, start) {
+        
+            // TODO: clear all the current items if we do a new init()
+        
         	start || (start = 0);
         	
         	currentIndex = start;

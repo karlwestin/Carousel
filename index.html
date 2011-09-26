@@ -34,18 +34,25 @@
 	<script src="js/libs/three.js"></script>		
 	<script src="js/libs/tween.js"></script>
 	<script src="js/libs/lib.js"></script>	
-	<script src="js/model.js"></script>		
+	<script src="js/model.js"></script>	
+	<script src="js/subviews.js"></script>			
 	<script src="js/script.js"></script>
     <script>
     
         window.addEventListener('load', function() {
 
+            var view = carousel;
+
+            // register subviews
+            view.registerSubview("image_price", imagePrice);
+            view.registerSubview("image", image);
+
             // load data
-            start("spotdata.xml", carousel);
+            start("spotdata.xml", view);
             
             // rotate
             setTimeout(function roll() {
-               carousel.next(); 
+               view.next(); 
                setTimeout(roll, 2000);
             }, 2000);
             
