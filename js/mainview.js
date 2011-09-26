@@ -55,8 +55,8 @@ var carousel = function(model) {
         // rotate
         setTimeout(function roll() {
                next(); 
-               setTimeout(roll, 2000);
-        }, 2000);
+               setTimeout(roll, 5000);
+        }, 5000);
     }            
     
     
@@ -139,7 +139,7 @@ var carousel = function(model) {
     
     function remove(index) {
 
-        var current = this.shownIndex(), new_index;
+        var current = shownIndex(), new_index;
         
         if(index != current) {
             if (index > current)
@@ -162,23 +162,16 @@ var carousel = function(model) {
     
     
     function update(change) {
-        
-
-        var change = data.change;
-        
-//        findItem(panels
-        
-        
-        for(var i=0; i < panels.length; i++) {
-            if(panels[i].index === change.index) {
-
-                if(change.quantity = 0)
-                    remove(change.index);                
-                
-                
-            }
+       
+        var item = findItem(panels, "index", change.index);       
+       
+        if(typeof item === "object" && change.quantity === 0) {
+            remove(panels.indexOf(item));
+        } else if(typeof item === "object") {
+            // other things update through the subview
+        } else {
+            // TODO: Write "add" function when the quantity goes up again
         }
-
         
     }
     
@@ -209,8 +202,7 @@ var carousel = function(model) {
     
     
     return({    
-        
-        remove: remove,    
+
         rotate: rotate,
         next: next,
         registerSubview: registerSubview,

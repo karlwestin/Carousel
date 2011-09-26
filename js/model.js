@@ -42,36 +42,31 @@ function XMLModel() {
     }
     
     function setArticleDetails(item_ref, artnr, price, quantity) {
-
-        function update() {
         
-            var updated = findItem(items, "artnr", artnr.toString()) || findItem(items, "src", item_ref);
-            
-            if(!updated)
-                throw new Error("The item you tried to change wasn't found in the item list");                                        
+        var updated = findItem(items, "artnr", artnr.toString()) || findItem(items, "src", item_ref);
         
-            if(!!price) {
-                updated.price = price.toString();                
-            }
-                    
-            if(!!artnr) {
-                updated.artnr = artnr.toString();
-            }
-            
-            if(!!quantity) {
-                updated.quantity = quantity;
-            }
-
-            return updated;
-
+        if(!updated)
+            throw new Error("The item you tried to change wasn't found in the item list");                                        
+    
+        if(!!price) {
+            updated.price = price.toString();                
         }
-        var changed_item = update();
-        updateObservableSubject.notifyObservers(changed_item);
+                
+        if(typeof artnr === "number" || parseInt(artnr) != NaN) {
+            updated.artnr = artnr.toString();
+        }
+        
+        if(typeof quantity === "number") {
+            updated.quantity = quantity;
+        }
+
+        return updated;
+
+        updateObservableSubject.notifyObservers(updated);
 
     }
     
     return {
-        items:                items,
         start:                start,
         setArticleDetails:    setArticleDetails,
         addInitObserver:      initObservableSubject.addObserver,

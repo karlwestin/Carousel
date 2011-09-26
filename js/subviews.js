@@ -3,7 +3,7 @@
 /* Image and Price view ------------------------------------------------------------------ */
 
 function imagePrice(config, model) {
-
+            
             config || (config = {});
             config.x = 0;
             config.z = 0;
@@ -32,13 +32,16 @@ function imagePrice(config, model) {
 		    element.rotation.x = radian(-20);
 		    element.position.z = config.z;
 		    element.position.x = config.x;  
-		    element.index = config.index;
+
+            for(prop in config){
+                element[prop] = config[prop];
+            }            
 		    
 		    function update(change) {
-		      if(change.index === config.index) {
-		          config.price = change.price;
-		          config.artnr = change.artnr;
-		          config.quantity = change.quantity;
+		      if(change.index === element.index) {
+		          element.price = change.price;
+		          element.artnr = change.artnr;
+		          element.quantity = change.quantity;
 		          drawView();
 		      }
 		    }
@@ -47,7 +50,7 @@ function imagePrice(config, model) {
 		    function drawView() {
 		      drawingArea.clearRect(0, 0, canvas.width, canvas.height);
 		      drawImage(img, drawingArea);
-		      setPrice(config.price, drawingArea);
+		      setPrice(element.price, drawingArea);
 
               // force redraw of texture		      
               texture.needsUpdate = true;		         
