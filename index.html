@@ -34,10 +34,24 @@
 	<script src="js/libs/three.js"></script>		
 	<script src="js/libs/tween.js"></script>
 	<script src="js/libs/lib.js"></script>	
+	<script src="js/model.js"></script>		
 	<script src="js/script.js"></script>
-	<!--[if lt IE 7 ]>
-	<script src="js/libs/dd_belatedpng.js"></script>
-	<script> DD_belatedPNG.fix('img, .png_bg');</script>
-	<![endif]-->
+    <script>
+    
+        window.addEventListener('load', function() {
+
+            // load data
+            start("spotdata.xml", carousel);
+            
+            // rotate
+            setTimeout(function roll() {
+               carousel.next(); 
+               setTimeout(roll, 2000);
+            }, 2000);
+            
+        }, false);
+    
+    </script>
+
 </body>
 </html>

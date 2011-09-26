@@ -214,35 +214,6 @@ var carousel = function() {
 
 }();
 
-var setup = [
-    {
-        image: 'images/A3.png',
-        price: 5
-    }, 
-    {
-        image: 'images/B.png',
-        price: 10
-    },
-    {
-        image: 'images/C.png',
-        price: 11
-    }, 
-    {
-        image: 'images/D.png',
-        price: 99
-    },
-    {
-        image: 'images/E.png',
-        price: 12
-    }, 
-    {
-        image: 'images/F.png',
-        price: 13
-    }
-];        
-
-carousel.init(setup);
-
 
 function animate() {
 	requestAnimationFrame( animate );
@@ -256,11 +227,3 @@ function render() {
 }
 
 animate();
-
-
-// Utility functions
-function forEach(array, action) {
-    for(var i = 0; i < array.length; i++) {
-        action(array[i], i, array);
-    }
-}
