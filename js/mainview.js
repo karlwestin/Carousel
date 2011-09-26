@@ -14,8 +14,6 @@ var WIDTH = 1920,
 var $container = $("#container"),
 	renderer = new THREE.CanvasRenderer(),
 	camera = new THREE.Camera(VIEW_ANGLE, ASPECT, NEAR, FAR),
-//  camera = new THREE.OrthoCamera(window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, -3000, 5000),
-//    camera = new THREE.OrthoCamera(window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight-500, -500, -3000, 5000),
 	scene = new THREE.Scene();
 
 camera.position.y = 500;
@@ -37,8 +35,9 @@ var carousel = function(model) {
     	speed = 500,
     	subviews = {};
     
-    // PubSub for init:
+    // PubSub for init & update:
     model.addInitObserver(init);
+    model.addUpdateObserver(update);
 
     function init(new_items, start_item) {
         
@@ -51,6 +50,7 @@ var carousel = function(model) {
         	start();
     }
     
+    
     function start() {
         // rotate
         setTimeout(function roll() {
@@ -59,16 +59,17 @@ var carousel = function(model) {
         }, 2000);
     }            
     
+    
     function setUpCircle(items, offset) {
     
-        //var positions = getPositions(items.length, offset);
-    	
         forEach(items, function(element, index, array) {
             panels.push(addView(element));
         });
         
         move(offset);
+    
     }
+    
     
     function rotate(newIndex) {
         var index = shownIndex(), i = 0, steps = newIndex - index;
@@ -83,21 +84,24 @@ var carousel = function(model) {
             } 
         }, 1);                 
     }
+    
         
     function next() {
         rotate(shownIndex() + 1);
     }    
+    
     
     function addView(config) {
 
         if(typeof subviews[config.type] != "function")
             throw new Error("Not a valid subview! Passed: " + config.type);
     
-        var element = subviews[config.type](config);
+        var element = subviews[config.type](config, model);
         scene.addChild(element);
         return element;    
 
     }
+    
     
     function getPositions(numberOfPanels, panelAtFront) {
         var positions = [];
@@ -118,6 +122,7 @@ var carousel = function(model) {
         return positions;
     }
     
+    
     function move(offset) {
         currentIndex = offset;
         var positions = getPositions(panels.length, offset);
@@ -130,6 +135,7 @@ var carousel = function(model) {
 			.easing( TWEEN.Easing.Quadratic.EaseOut).start();
 		}    	
     }
+    
     
     function remove(index) {
 
@@ -154,36 +160,57 @@ var carousel = function(model) {
         
     }
     
+    
+    function update(change) {
+        
+
+        var change = data.change;
+        
+//        findItem(panels
+        
+        
+        for(var i=0; i < panels.length; i++) {
+            if(panels[i].index === change.index) {
+
+                if(change.quantity = 0)
+                    remove(change.index);                
+                
+                
+            }
+        }
+
+        
+    }
+    
+    
     function registerSubview(name, item) {
         subviews[name] = item;
     }
+    
     
     function shownIndex() {
         return currentIndex - Math.floor(currentIndex/panels.length) * panels.length;
     }
     
-    function add(index) {
-        index || (index = panels.length);
-        panels.splice(index, 0, addView());
-        move(currentIndex);      
-    }
     
     function setTiming(time) {
         speed = time;
     }
+    
         
     function setX(rotateY) {
         return radius * Math.sin(radian(rotateY)) + WIDTH/2;
     }
     
+    
     function setZ(rotateY) {
         return radius * Math.cos(radian(rotateY)) - 2 * radius;
     }    
     
+    
     return({    
         
         remove: remove,    
-        add: add,
         rotate: rotate,
         next: next,
         registerSubview: registerSubview,

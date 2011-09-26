@@ -2,14 +2,14 @@
 
 /* Image and Price view ------------------------------------------------------------------ */
 
-function imagePrice(config) {
+function imagePrice(config, model) {
 
-            config || (config = {x:0, y:0, z:0});
+            config || (config = {});
             config.x = 0;
             config.z = 0;
             config.y = 0;
 
-            if(typeof config.image != "string")
+            if(typeof config.src != "string")
                 throw new Error("No image loaded on element " + config.index);
             
             var canvas = document.createElement("canvas");
@@ -18,24 +18,8 @@ function imagePrice(config) {
             var drawingArea = canvas.getContext("2d");
             
             var img = new Image();
-            img.src = config.image;
-            img.onload = function() {
-                drawingArea.drawImage(img, 0, 0);            
-                
-                if(!!config.price) {                
-                    drawingArea.fillStyle="white";
-                    drawingArea.textAlign="right";
-                    drawingArea.font = "300px Avenir";
-                    drawingArea.fillText(config.price, 400, 600);
-                    
-                    drawingArea.font = "100px Avenir";
-                    drawingArea.textAlign="left";
-                    drawingArea.fillText(String.fromCharCode(8364), 400, 600);
-                }
-                // force redraw of texture
-                texture.needsUpdate = true;
-            };
-            
+            img.src = config.src;
+            img.onload = drawView;
             
             var texture = new THREE.Texture( canvas );
 			texture.minFilter = THREE.LinearFilter;
@@ -44,58 +28,43 @@ function imagePrice(config) {
             var material = new THREE.MeshBasicMaterial( { map: texture } );
             var element = new THREE.Mesh( new THREE.PlaneGeometry( 500, 800 ), material );
             
-            element.overdraw = true;
-                    
+            element.overdraw = true;        
 		    element.rotation.x = radian(-20);
 		    element.position.z = config.z;
-		    element.position.x = config.x;    
+		    element.position.x = config.x;  
+		    element.index = config.index;
+		    
+		    function update(change) {
+		      if(change.index === config.index) {
+		          config.price = change.price;
+		          config.artnr = change.artnr;
+		          config.quantity = change.quantity;
+		          drawView();
+		      }
+		    }
+            model.addUpdateObserver(update);		    
+		    
+		    function drawView() {
+		      drawingArea.clearRect(0, 0, canvas.width, canvas.height);
+		      drawImage(img, drawingArea);
+		      setPrice(config.price, drawingArea);
+
+              // force redraw of texture		      
+              texture.needsUpdate = true;		         
+		    }
+		    
+		    function drawImage(img, canvas) {
+                canvas.drawImage(img, 50, 0);		    
+		    }  
+		    
+		    function setPrice(price, canvas) {
+                canvas.fillStyle="white";
+                canvas.textAlign="center";
+                canvas.font = "250px Avenir";
+                canvas.fillText(price, 280, 550);		    
+		    }
+		    
 		    
 		    return element;
 
 };
-
-
-/* Image, no price subview ------------------------------------------------------------------ */
-
-function image(config) {
-
-            config || (config = {x:0, y:0, z:0});
-            config.x = 0;
-            config.z = 0;
-            config.y = 0;
-
-            if(typeof config.image != "string")
-                throw new Error("No image loaded on element " + config.index);
-            
-            var canvas = document.createElement("canvas");
-            canvas.width = 500;
-            canvas.height = 800;
-            var drawingArea = canvas.getContext("2d");
-            
-            var img = new Image();
-            img.src = config.image;
-            img.onload = function() {
-                drawingArea.drawImage(img, 0, 0);            
-                // force redraw of texture
-                texture.needsUpdate = true;
-            };
-            
-            
-            var texture = new THREE.Texture( canvas );
-			texture.minFilter = THREE.LinearFilter;
-            texture.magFilter = THREE.LinearFilter;            
-
-            var material = new THREE.MeshBasicMaterial( { map: texture } );
-            var element = new THREE.Mesh( new THREE.PlaneGeometry( 500, 800 ), material );
-            
-            element.overdraw = true;
-                    
-		    element.rotation.x = radian(-25);
-		    element.position.z = config.z;
-		    element.position.x = config.x;    
-		    
-		    return element;
-
-};
-
-

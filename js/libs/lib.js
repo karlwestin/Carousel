@@ -26,6 +26,22 @@ function forEach(array, action) {
     }
 }
 
+function findItem(array, searchKey, searchValue) {
+    var found = [];
+    
+    forEach(array, function(element) {
+        if(element[searchKey]===searchValue)
+            found.push(element);
+    });
+    
+    if(found.length > 1)
+        return found;
+    else if(found.length === 1)
+        return found[0];
+    else 
+        return false;    
+}
+
 // PubSub
 function makeObservableSubject() {
     var observers = [];

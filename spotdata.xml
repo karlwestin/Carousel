@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Spot>
-	<Item image="images/cube.png" type="image_price" price="39"/>
-	<Item image="images/cylinder.png"  type="image_price" price="29"/>
-	<Item image="images/pyramid.png"  type="image_price" price="24"/>
-	<Item image="images/ball.png"  type="image_price" price="19"/>		
+	<Item src="images/cube.png"     type="image_price" artnr="1" price="39;-"/>
+	<Item src="images/cylinder.png" type="image_price" artnr="2" price="29;-"/>
+	<Item src="images/pyramid.png"  type="image_price" artnr="3" price="24;-"/>
+	<Item src="images/ball.png"     type="image_price" artnr="4" price="19;-"/>		
 </Spot>

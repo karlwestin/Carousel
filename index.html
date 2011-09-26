@@ -17,9 +17,6 @@
 	<link rel="shortcut icon" href="/favicon.ico">
 	<link rel="stylesheet" href="css/style.css?v=2">
 
-	<!--[if lt IE 9]>
-	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
 </head>
 <body>
     <h1>
@@ -36,19 +33,20 @@
 	<script src="js/libs/lib.js"></script>	
 	<script src="js/model.js"></script>	
 	<script src="js/subviews.js"></script>			
-	<script src="js/script.js"></script>
+	<script src="js/mainview.js"></script>
     <script>
     
         window.addEventListener('load', function() {
 
             var model = XMLModel();
-            window.start = model.start;
-            window.setArticleDetails = model.setArticleDetails;
-
             var view = carousel(model);
                         
             view.registerSubview("image_price", imagePrice);
-            view.registerSubview("image", image);
+
+            // 'publish' public API
+            window.start = model.start;
+            window.setArticleDetails = model.setArticleDetails;
+            window.getItemIndex = view.shownIndex;
 
             // load data
             start("spotdata.xml");
