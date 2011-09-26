@@ -1,18 +1,33 @@
 // Data model for carousel demo
 
 
-//API start
-function start = function(spotData, view) {
+function XMLModel() {
 
-	var items = loadSpotData(spotData);
-	view.init(items);
+    var initObservableSubject    = makeObservableSubject(),
+        addObservableSubject     = makeObservableSubject(),
+        removeObsvervableSubject = makeObservableSubject();
 
-
-    function getItemIndex() {
-    	return view.shownIndex();
+    //API start
+	var start = function(spotData) {
+    	var items = loadSpotData(spotData);
+    	
+    	// TODO: sort this out – What's the best way of writing?
+    	if(startingFromScratch()) 
+    	    init(items);
+        else if(addingItems())
+            add(items);
+        else if(removingItems())
+            remove(items);
     }
     //API end
     
+    function startingFromScratch() {
+        return true; // yeah, right
+    }
+    
+    function init(items) {
+        initObservableSubject.notifyObservers(items);
+    }
     
     function loadSpotData(dataUrl) {
     	var items = [];
@@ -38,10 +53,17 @@ function start = function(spotData, view) {
     	return items;
     }
     
-    return {
-        getItemIndex: getItemIndex;
+    function setArticleDetails(item_ref, artnr, price, quantity) {
+    
     }
     
-}
+    return {
+        start: start,
+        setArticleDetails: setArticleDetails,
+        addInitObserver: initObservableSubject.addObserver,
+        removeInitObserver: initObservableSubject.removeObserver
+    }
+    
+};
 
 

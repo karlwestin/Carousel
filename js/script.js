@@ -3,8 +3,8 @@
 // Main view for carousel pattern
 
 // SETUP
-var WIDTH = 800,
-	HEIGHT = 500,
+var WIDTH = 1920,
+	HEIGHT = 1080,
 	VIEW_ANGLE = 70,
 	ASPECT = WIDTH/HEIGHT,
 	NEAR = 0.1,
@@ -17,24 +17,45 @@ var $container = $("#container"),
 	scene = new THREE.Scene();
 
 camera.position.y = 500;
-camera.position.z = 500;
-camera.position.x = 400;
+camera.position.z = 0;
+camera.position.x = WIDTH/2;
 camera.target.position.y = 0;
 camera.target.position.x = WIDTH/2;
-camera.target.position.z = -500;
+camera.target.position.z = -1000;
 
 renderer.setSize(WIDTH, HEIGHT);
 $container.append(renderer.domElement);
 
 
-var carousel = function() {
+var carousel = function(model) {
 
 	var panels = [],
 		currentIndex = 0,    
-    	radius = 800,
-    	timeout = 500,
+    	radius = 1920,
+    	speed = 500,
     	subviews = {};
-    	
+    
+    // PubSub for init:
+    model.addInitObserver(init);
+
+    function init(new_items, start_item) {
+        
+            // TODO: clear all the current items if we do a new init()
+        
+        	start_item || (start_item = 0);
+        	
+        	currentIndex = start_item;
+        	setUpCircle(new_items, start_item);
+        	start();
+    }
+    
+    function start() {
+        // rotate
+        setTimeout(function roll() {
+               next(); 
+               setTimeout(roll, 2000);
+        }, 2000);
+    }            
     
     function setUpCircle(items, offset) {
     
@@ -46,6 +67,24 @@ var carousel = function() {
         
         move(offset);
     }
+    
+    function rotate(newIndex) {
+        var index = shownIndex(), i = 0, steps = newIndex - index;
+        steps = (steps > 0) ? steps - 1 : steps + panels.length - 1;
+
+        setTimeout(function roll() {
+            index++;
+            move(index);
+            if(i<steps) {
+                i++;
+                setTimeout(roll, timeout);
+            } 
+        }, 1);                 
+    }
+        
+    function next() {
+        rotate(shownIndex() + 1);
+    }    
     
     function addView(config) {
 
@@ -85,7 +124,7 @@ var carousel = function() {
 			new TWEEN.Tween( panels[i].position ).to( {
 				x: positions[i].x,
 				y: positions[i].y,
-				z: positions[i].z }, timeout)
+				z: positions[i].z }, speed)
 			.easing( TWEEN.Easing.Quadratic.EaseOut).start();
 		}    	
     }
@@ -117,6 +156,10 @@ var carousel = function() {
         subviews[name] = item;
     }
     
+    function shownIndex() {
+        return currentIndex - Math.floor(currentIndex/panels.length) * panels.length;
+    }
+    
     function add(index) {
         index || (index = panels.length);
         panels.splice(index, 0, addView());
@@ -124,7 +167,7 @@ var carousel = function() {
     }
     
     function setTiming(time) {
-        timeout = time;
+        speed = time;
     }
         
     function setX(rotateY) {
@@ -136,51 +179,18 @@ var carousel = function() {
     }    
     
     return({    
+        
         remove: remove,    
-        
         add: add,
-        
+        rotate: rotate,
+        next: next,
         registerSubview: registerSubview,
-        
-        // exposing timeout for testing purpose
-        setTiming: setTiming,
-    
-        shownIndex: function() {
-            return currentIndex - Math.floor(currentIndex/panels.length) * panels.length;
-        },
-        
-        rotate: function(newIndex) {
-            var index = this.shownIndex(), i = 0, steps = newIndex - index;
-            steps = (steps > 0) ? steps - 1 : steps + panels.length - 1;
-
-            setTimeout(function roll() {
-                index++;
-                move(index);
-                if(i<steps) {
-                    i++;
-                    setTimeout(roll, timeout);
-                } 
-            }, 1);
-                 
-        },
-        
-        next: function() {
-            this.rotate(this.shownIndex() + 1);
-        },
-        
-        init: function(new_items, start) {
-        
-            // TODO: clear all the current items if we do a new init()
-        
-        	start || (start = 0);
-        	
-        	currentIndex = start;
-        	setUpCircle(new_items, start);
-        }
+        setTiming: setTiming, // exposing timeout for testing purpose
+        shownIndex: shownIndex
         
     });
 
-}();
+};
 
 
 function animate() {

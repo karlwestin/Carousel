@@ -41,20 +41,17 @@
     
         window.addEventListener('load', function() {
 
-            var view = carousel;
+            var model = XMLModel();
+            window.start = model.start;
+            window.setArticleDetails = model.setArticleDetails;
 
-            // register subviews
+            var view = carousel(model);
+                        
             view.registerSubview("image_price", imagePrice);
             view.registerSubview("image", image);
 
             // load data
-            start("spotdata.xml", view);
-            
-            // rotate
-            setTimeout(function roll() {
-               view.next(); 
-               setTimeout(roll, 2000);
-            }, 2000);
+            start("spotdata.xml");
             
         }, false);
     

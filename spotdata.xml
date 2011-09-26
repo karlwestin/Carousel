@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Spot>
-	<Item image="images/A3.png" type="image_price" price="10"/>
-	<Item image="images/B.png"  type="image"       price="9"/>
-	<Item image="images/C.png"  type="image_price" price="11"/>  
-	<Item image="images/D.png"  type="image_price" price="12"/>
-	<Item image="images/E.png"  type="image_price" price="13"/>
-	<Item image="images/F.png"  type="image_price" price="15"/>		
+	<Item image="images/cube.png" type="image_price" price="39"/>
+	<Item image="images/cylinder.png"  type="image_price" price="29"/>
+	<Item image="images/pyramid.png"  type="image_price" price="24"/>
+	<Item image="images/ball.png"  type="image_price" price="19"/>		
 </Spot>
