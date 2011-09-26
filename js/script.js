@@ -66,10 +66,10 @@ var carousel = function() {
                 if(!!config.price) {                
                     drawingArea.fillStyle="white";
                     drawingArea.textAlign="right";
-                    drawingArea.font = "300px 'Avenir LT Standard'";
+                    drawingArea.font = "300px Avenir";
                     drawingArea.fillText(config.price, 400, 600);
                     
-                    drawingArea.font = "100px 'Avenir LT Standard'"
+                    drawingArea.font = "100px Avenir";
                     drawingArea.textAlign="left";
                     drawingArea.fillText(String.fromCharCode(8364), 400, 600);
                 }
@@ -259,7 +259,6 @@ animate();
 
 
 // Utility functions
-
 function forEach(array, action) {
     for(var i = 0; i < array.length; i++) {
         action(array[i], i, array);

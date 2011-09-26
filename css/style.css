@@ -86,6 +86,12 @@ a:hover { color: #036; }
     \\ ========================================== //
 */
 
+@font-face {
+   font-family: Avenir;
+   src: url(AvenirLTStd-Black.otf);
+   unicode-range: U+0-7F;
+ }
+
 
 ul {
     list-style-type: none;
@@ -118,6 +124,18 @@ body {
 }
 
 
+h1 {
+    display: none;
+    z-index: -100;
+    font-family: Avenir;
+    color: #000;
+    font-size: 30px;
+}
+
+
+canvas {
+    letter-spacing: -0.05em;
+}
 
 
 
