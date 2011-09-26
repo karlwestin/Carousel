@@ -38,16 +38,23 @@ var carousel = function() {
         //var positions = getPositions(items.length, offset);
     	
         forEach(items, function(element, index, array) {
-            panels.push(addView());
+            panels.push(addView(element, index));
         });
         
         move(offset);
     }
     
-    function addView(config) {
+    function addView(config, number) {
             config || (config = {x:0, y:0, z:0});
+            config.x = 0;
+            config.z = 0;
+            config.y = 0;
 
-			var element = new THREE.Mesh( new THREE.PlaneGeometry( 400, 400 ), new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff } ) );
+            if(typeof config.image != "string")
+                throw new Error("No image loaded on element " + number);
+
+            var material = new THREE.MeshLambertMaterial( { map: THREE.ImageUtils.loadTexture( config.image ) } );
+            var element = new THREE.Mesh( new THREE.PlaneGeometry( 500, 500 ), material );
             
             element.overdraw = true;
 			scene.addChild( element );    
@@ -178,7 +185,28 @@ var carousel = function() {
 
 }();
 
-carousel.init([1, 2, 3, 4, 5, 6]);
+var setup = [
+    {
+        image: 'images/A3.png'
+    }, 
+    {
+        image: 'images/B.png'
+    },
+    {
+        image: 'images/C.png'
+    }, 
+    {
+        image: 'images/D.png'
+    },
+    {
+        image: 'images/E.png'
+    }, 
+    {
+        image: 'images/F.png'
+    }
+];        
+
+carousel.init(setup);
 
 
 function animate() {
